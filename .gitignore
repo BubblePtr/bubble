@@ -26,3 +26,4 @@ target
 /target
 book/node_modules
 book/dist
+book/.next

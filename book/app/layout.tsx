@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { Head } from "nextra/components";
-import { getPageMap } from "nextra/page-map";
-import { Footer, Layout, Navbar } from "nextra-theme-docs";
-import "nextra-theme-docs/style.css";
+import { Fustat, Inter } from "next/font/google";
+import "./globals.css";
+import "remixicon/fonts/remixicon.css";
 
 export const metadata: Metadata = {
   title: "Learn Agent Build",
   description: "Learn Agent Build 的架构与实现思路教学文档。"
 };
 
-const navbar = <Navbar logo={<b>Learn Agent Build</b>} />;
-const footer = <Footer>MIT {new Date().getFullYear()} © Learn Agent Build.</Footer>;
+const fustat = Fustat({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["700", "800"]
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  weight: ["400", "500", "600", "700"]
+});
 
 export default async function RootLayout({
   children
@@ -19,16 +27,8 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" dir="ltr" suppressHydrationWarning>
-      <Head />
-      <body>
-        <Layout
-          navbar={navbar}
-          footer={footer}
-          pageMap={await getPageMap()}
-          docsRepositoryBase="https://github.com/BubblePtr/bubble/tree/main/book/content"
-        >
-          {children}
-        </Layout>
+      <body className={`${fustat.variable} ${inter.variable}`}>
+        {children}
       </body>
     </html>
   );

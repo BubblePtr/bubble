@@ -1,0 +1,13 @@
+[package]
+name = "bubble-memory"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+anyhow.workspace = true
+bubble-context = { path = "../context" }
+
+[lints]
+workspace = true

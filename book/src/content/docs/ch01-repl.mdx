@@ -1,0 +1,25 @@
+---
+title: "Chapter 1: REPL"
+description: 解释 Bubble 中最基础的 agent 循环与 tool calling 路径。
+---
+
+# Chapter 1: 基础 REPL + Tool Calling
+
+本章会围绕最小可运行 agent 的执行路径展开：
+
+1. 用户输入进入 REPL
+2. 系统提示词与历史消息组装
+3. 模型返回普通回复或 tool call
+4. tool 执行结果回填消息历史
+5. 继续循环直到生成最终回复
+
+## 本章待补内容
+
+- REPL 主循环的职责边界
+- 消息模型与 tool call 数据结构
+- 为什么第一阶段仍保留过渡实现
+- 后续如何把这部分迁入 `bubble-core` 和 `bubble-tools`
+
+## 交互组件计划
+
+这里后续会放一个步进式执行流程组件，用静态状态切换展示每一步发生了什么。

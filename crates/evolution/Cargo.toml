@@ -1,0 +1,13 @@
+[package]
+name = "bubble-evolution"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+anyhow.workspace = true
+bubble-memory = { path = "../memory" }
+
+[lints]
+workspace = true

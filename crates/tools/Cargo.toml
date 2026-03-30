@@ -1,0 +1,14 @@
+[package]
+name = "bubble-tools"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+anyhow.workspace = true
+bubble-core = { path = "../core" }
+bubble-providers = { path = "../providers" }
+
+[lints]
+workspace = true

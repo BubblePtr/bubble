@@ -24,3 +24,5 @@ target
 # Added by cargo
 
 /target
+book/node_modules
+book/dist

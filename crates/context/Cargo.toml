@@ -1,0 +1,12 @@
+[package]
+name = "bubble-context"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+bubble-tools = { path = "../tools" }
+
+[lints]
+workspace = true

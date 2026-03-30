@@ -31,11 +31,73 @@ name = "bubble"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "bubble-context",
+ "bubble-core",
+ "bubble-evolution",
+ "bubble-harness",
+ "bubble-memory",
+ "bubble-providers",
+ "bubble-tools",
  "reqwest",
  "serde",
  "serde_json",
  "serde_yaml",
  "tokio",
+]
+
+[[package]]
+name = "bubble-context"
+version = "0.1.0"
+dependencies = [
+ "bubble-tools",
+]
+
+[[package]]
+name = "bubble-core"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "serde",
+]
+
+[[package]]
+name = "bubble-evolution"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bubble-memory",
+]
+
+[[package]]
+name = "bubble-harness"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bubble-evolution",
+]
+
+[[package]]
+name = "bubble-memory"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bubble-context",
+]
+
+[[package]]
+name = "bubble-providers"
+version = "0.1.0"
+dependencies = [
+ "bubble-core",
+]
+
+[[package]]
+name = "bubble-tools"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bubble-core",
+ "bubble-providers",
 ]
 
 [[package]]

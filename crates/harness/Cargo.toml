@@ -1,0 +1,13 @@
+[package]
+name = "bubble-harness"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+anyhow.workspace = true
+bubble-evolution = { path = "../evolution" }
+
+[lints]
+workspace = true

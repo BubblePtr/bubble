@@ -3,22 +3,47 @@ title: Learn Agent Build
 description: Learn Agent Build 的架构与实现思路教学文档。
 ---
 
+import { ProjectCard, ProjectCardGrid } from "../../src/components/ProjectCard";
+
 # Learn Agent Build
 
-这不是 API 参考手册，而是解释 Learn Agent Build 为什么这样拆、各模块准备承载什么职责的教学网站。
+本书会带你学习如何**从零开始**构建一个通用 Agent 。
 
-当前阶段先搭建章节结构，正文会随着框架内核逐步稳定后补充。
+思考一个通用 Agent 需要哪些模块？以及如何构建这些模块？
 
-## 计划章节
+由于本书的教程性质，构建时尽量不依赖三方库，但同时也会推荐优质的开源仓库供读者使用和学习。
 
-1. 基础 REPL 与 tool calling
-2. Context engineering
-3. 长期记忆系统
-4. 自我进化机制
-5. Harness 与可观测性
+### 从 Coding Agent 开始
 
-## 当前原则
+为什么从 Coding Agent 开始？先明确一个指导思想。
 
-- 网站解释设计决策，不追踪每次代码微调。
-- 代码示例后续优先从源码直接 include，避免手动复制。
-- 交互式步进动画会在章节稳定后补上。
+**Coding Agent 是通用 Agent 的最佳实践，Coding Agent 是非 Coding Agent 的超集。**
+
+通用 Agent 追求解决问题的能力，面对不同的领域依赖不同的工具，需要预定义好不同的 Function 来组合调用，而这些工具是无法穷举的。因此不如直接让大模型来写代码，代码本身就可以衍生成无数个 Function。
+
+### prompt 即源码
+
+本教程不会事无巨细地将源码罗列出来，但是每章节的最后会留有一份 prompt。用这些 prompt 配合 coding agent 也可以构建出一个属于你自己的、任何语言的通用 agent。
+
+### 开源项目推荐
+
+如果你不想跟着本教程从零构建，以下是几个值得学习的开源 Agent 项目。
+
+<ProjectCardGrid>
+  <ProjectCard
+    title="Pi Coding Agent"
+    description="极简 Agent 架构，OpenClaw 背后的强力驱动器，4 个基础工具构建一切。"
+    href="https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent"
+    logo="/pi-agent-logo.svg"
+    logoAlt="PI Agent avatar"
+    logoBg="#09090b"
+  />
+  <ProjectCard
+    title="Hermes Agent"
+    description="Nous Research 出品的自进化 Agent。任务完成后自动生成 Skill 文档，三级记忆系统，40+ 内置技能。"
+    href="https://github.com/nousresearch/hermes-agent"
+    logo="/hermes-agent-logo.png"
+    logoAlt="Hermes Agent logo"
+    logoScale={1.05}
+  />
+</ProjectCardGrid>

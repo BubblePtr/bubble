@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fustat, Inter } from "next/font/google";
 import "./globals.css";
 import "remixicon/fonts/remixicon.css";
@@ -6,6 +6,13 @@ import "remixicon/fonts/remixicon.css";
 export const metadata: Metadata = {
   title: "Learn Agent Build",
   description: "Learn Agent Build 的架构与实现思路教学文档。"
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "rgb(250,250,250)" },
+    { media: "(prefers-color-scheme: dark)", color: "rgb(17,17,17)" }
+  ]
 };
 
 const fustat = Fustat({

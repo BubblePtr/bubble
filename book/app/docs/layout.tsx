@@ -1,4 +1,3 @@
-import { Head } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import { Footer, Layout, Navbar } from "nextra-theme-docs";
 import "nextra-theme-docs/style.css";
@@ -12,16 +11,13 @@ export default async function DocsLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <Head />
-      <Layout
-        navbar={navbar}
-        footer={footer}
-        pageMap={await getPageMap("/docs")}
-        docsRepositoryBase="https://github.com/BubblePtr/bubble/tree/main/book/content/docs"
-      >
-        {children}
-      </Layout>
-    </>
+    <Layout
+      navbar={navbar}
+      footer={footer}
+      pageMap={await getPageMap("/docs")}
+      docsRepositoryBase="https://github.com/BubblePtr/bubble/tree/main/book/content/docs"
+    >
+      {children}
+    </Layout>
   );
 }

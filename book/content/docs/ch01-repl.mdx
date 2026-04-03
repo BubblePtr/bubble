@@ -3,14 +3,98 @@ title: 基础 REPL 与 tool calling
 description: 从最小可运行 agent 闭环开始。
 ---
 
-# 基础 REPL 与 tool calling
+import { ReplCycleAnimation } from "../../src/components/ReplCycleAnimation";
+import { AgentLoopAnimation } from "../../src/components/AgentLoopAnimation";
 
-这一章先解决一个问题：如果不考虑长期记忆、多 agent、自我进化，只想把一个最小可运行的 agent 系统搭出来，最少需要哪些部件？
+# 基础 REPL 循环
 
-后续这里会补完整正文，包括：
+第一章先介绍 Agent 的基础循环。这个循环是整个 Agent 系统的心脏——无论后续加上多复杂的记忆、上下文管理或自我进化能力，底层始终是这一层循环在驱动。理解并掌握它，就等于拿到了构建一切 Agent 能力的起点。
 
-- 对话循环
-- tool schema
-- 执行器边界
-- 错误处理
-- 观察与调试入口
+## 什么是 REPL ？
+
+REPL = Read → Eval → Print → Loop，它是"读入 → 执行 → 输出 → 再等待输入"的交互循环。这个循环完美契合了我们与大模型交互的模式。
+
+<ReplCycleAnimation />
+
+### 这个循环，需要哪些对象？
+
+1. **User**：用户，发起请求的人，也是最终接收回答的对象。
+2. **Assistant**：大模型，负责理解意图、生成回答，并决定是否需要调用工具。
+3. **Tool**：工具，Agent 可以调用的外部能力，比如读文件、执行命令等。
+4. **Message**：聊天记录，承载整个对话过程，每一轮交互都会追加到其中。
+
+现在我们把这些对象和这个循环连接上
+
+<AgentLoopAnimation />
+
+## 认识 Tool Call
+
+什么是 Tool Call（工具调用）？
+
+大语言模型只能生成文本，无法真正读文件、跑命令、访问网络。但我们可以给它一份“工具菜单”，它就能在回复中表达“我想调用某个工具”的意图。有了 Tool Call 大模型就有了接触计算机系统的能力。
+
+### Tool Call 的格式
+
+模型回复中可能包含 tool call，以 OpenAI 格式为例：
+
+```json
+{
+  "id": "fc_12345xyz",
+  "call_id": "call_12345xyz",
+  "type": "function_call",
+  "name": "get_weather",
+  "arguments": "{\"location\":\"Paris, France\"}"
+}
+```
+
+三个关键字段：
+
+- **id**：调用的唯一标识，返回结果时需要对应上。
+- **name**：要调用哪个工具。
+- **arguments**：传给工具的参数，JSON 字符串。
+
+我们的程序需要做四件事：
+
+1. 从模型回复中解析出 tool call。
+2. 根据 `name` 找到对应工具，传入 `arguments` 执行。
+3. 把结果包装成 `tool` 角色的消息，追加到聊天记录。
+4. 带上更新后的聊天记录再次请求模型。
+
+这就是 Agent Loop 中"Tool 分支"的逻辑。模型可能连续调用多个工具，直到收集够信息再给出最终回答。
+
+### 如何定义一个 Tool？
+
+模型需要知道有哪些工具可用，我们在请求中传入工具定义：
+
+```json
+{
+  "type": "function",
+  "name": "get_weather",
+  "description": "Retrieves current weather for the given location.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "location": {
+        "type": "string",
+        "description": "City and country e.g. Bogotá, Colombia"
+      },
+      "units": {
+        "type": "string",
+        "enum": ["celsius", "fahrenheit"],
+        "description": "Units the temperature will be returned in."
+      }
+    },
+    "required": ["location", "units"],
+    "additionalProperties": false
+  },
+  "strict": true
+}
+```
+
+三个关键的字段：
+
+- **name**：工具名称，模型回复时引用。
+- **description**：描述工具的能力和用途。
+- **parameters**：参数的 JSON Schema，定义参数名、类型和是否必填。
+
+description 写得越清晰，模型越能准确判断何时、如何使用工具——这是 Agent 调优的重要手段。

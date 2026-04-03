@@ -1,21 +1,6 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 
-const chapters = [
-  {
-    title: "从 REPL 到 tool calling",
-    description: "先把 agent 最小闭环搭起来，再逐层加能力，不从空泛概念入手。"
-  },
-  {
-    title: "Context engineering",
-    description: "解释上下文边界、提示拼接、状态压缩，以及为什么这些比模型切换更关键。"
-  },
-  {
-    title: "长期记忆与演化",
-    description: "拆开记忆写入、检索、评估和自我改进，避免把所有能力混成一个黑盒。"
-  }
-];
-
 const capabilityModules = [
   {
     icon: "ri-hammer-line",
@@ -87,12 +72,11 @@ export default function HomePage() {
 
             <nav className={styles.navLinks} aria-label="Primary">
               <a href="#overview">Overview</a>
-              <a href="#chapters">Chapters</a>
-              <a href="#why">Why This Book</a>
-              <Link href="/docs/ch01-repl">Read</Link>
+              <a href="#modules">Modules</a>
+              <Link href="/docs">Read</Link>
             </nav>
 
-            <Link href="/docs/ch01-repl" className={styles.navCta}>
+            <Link href="/docs" className={styles.navCta}>
               Start Reading
               <span className={styles.navCtaIcon}>
                 <ArrowIcon />
@@ -116,14 +100,14 @@ export default function HomePage() {
             </p>
 
             <div className={styles.actions}>
-              <Link href="/docs/ch01-repl" className={styles.primaryCta}>
+              <Link href="/docs" className={styles.primaryCta}>
                 <span>Start Reading</span>
                 <span className={styles.primaryIcon}>
                   <ArrowIcon />
                 </span>
               </Link>
-              <a href="#chapters" className={styles.secondaryLink}>
-                Preview the chapters
+              <a href="#modules" className={styles.secondaryLink}>
+                See the modules
               </a>
             </div>
           </div>
@@ -142,7 +126,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className={styles.capabilitySection} aria-label="Core chapters">
+        <section className={styles.capabilitySection} id="modules" aria-label="Core chapters">
           <p className={styles.logoTitle}>Core chapter modules</p>
           <div className={styles.capabilityRow}>
             {capabilityModules.map((item) => (
@@ -156,36 +140,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className={styles.section} id="chapters">
-          <div className={styles.sectionIntro}>
-            <p className={styles.sectionLabel}>Book Structure</p>
-            <h2>从最小闭环开始，逐步长出真正可维护的 agent 能力</h2>
-          </div>
-
-          <div className={styles.chapterGrid}>
-            {chapters.map((chapter) => (
-              <article key={chapter.title} className={styles.chapterItem}>
-                <h3>{chapter.title}</h3>
-                <p>{chapter.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.section} id="why">
-          <div className={styles.whyBlock}>
-            <p className={styles.sectionLabel}>Why This Book</p>
-            <h2>不是 API 手册，是把系统设计决策讲透</h2>
-            <p>
-              Learn Agent Build 更适合已经开始写 agent、但不想继续靠堆提示词碰运气的人。
-              你会看到每个模块的职责边界、什么时候该保持简单、什么时候值得引入 memory、eval
-              与 harness。
-            </p>
-            <Link href="/docs/ch01-repl" className={styles.inlineLink}>
-              Read chapter one
-            </Link>
-          </div>
-        </section>
+        <footer className={styles.footer}>MIT {new Date().getFullYear()} © Learn Agent Build.</footer>
       </div>
     </main>
   );

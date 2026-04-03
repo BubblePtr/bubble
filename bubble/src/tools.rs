@@ -1,5 +1,5 @@
 use std::fs;
-use std::path::Path;
+use std::path::{Component, Path};
 use std::process::Command;
 
 use anyhow::{Context, Result, bail};
@@ -26,7 +26,7 @@ pub fn definitions() -> Vec<Value> {
     vec![
         function_tool(
             "bash",
-            "Run a shell command in the current working directory.",
+            "Run a shell command in the current working directory. This tool is not sandboxed.",
             json!({
                 "type": "object",
                 "properties": {
@@ -95,7 +95,7 @@ pub fn execute(call: &ToolCall, cwd: &Path) -> Result<String> {
         "read" => {
             let input: ReadInput = serde_json::from_str(&call.function.arguments)
                 .with_context(|| format!("invalid arguments for {}", call.function.name))?;
-            let path = resolve_path(cwd, &input.path);
+            let path = resolve_path(cwd, &input.path)?;
             let bytes =
                 fs::read(&path).with_context(|| format!("failed to read {}", path.display()))?;
             let truncated = bytes.len() > MAX_READ_BYTES;
@@ -114,7 +114,7 @@ pub fn execute(call: &ToolCall, cwd: &Path) -> Result<String> {
         "write" => {
             let input: WriteInput = serde_json::from_str(&call.function.arguments)
                 .with_context(|| format!("invalid arguments for {}", call.function.name))?;
-            let path = resolve_path(cwd, &input.path);
+            let path = resolve_path(cwd, &input.path)?;
             if let Some(parent) = path.parent() {
                 fs::create_dir_all(parent)
                     .with_context(|| format!("failed to create {}", parent.display()))?;
@@ -129,7 +129,7 @@ pub fn execute(call: &ToolCall, cwd: &Path) -> Result<String> {
             if input.old.is_empty() {
                 bail!("edit.old cannot be empty");
             }
-            let path = resolve_path(cwd, &input.path);
+            let path = resolve_path(cwd, &input.path)?;
             let content = fs::read_to_string(&path)
                 .with_context(|| format!("failed to read {}", path.display()))?;
             let matches = content.match_indices(&input.old).count();
@@ -159,13 +159,21 @@ fn function_tool(name: &str, description: &str, parameters: Value) -> Value {
     })
 }
 
-fn resolve_path(cwd: &Path, path: &str) -> std::path::PathBuf {
+fn resolve_path(cwd: &Path, path: &str) -> Result<std::path::PathBuf> {
     let path = Path::new(path);
-    if path.is_absolute() {
-        path.to_path_buf()
-    } else {
-        cwd.join(path)
+    if path.as_os_str().is_empty() {
+        bail!("path cannot be empty");
     }
+    if path.is_absolute() {
+        bail!("absolute paths are not allowed: {}", path.display());
+    }
+    if path
+        .components()
+        .any(|component| matches!(component, Component::ParentDir | Component::Prefix(_)))
+    {
+        bail!("parent directory traversal is not allowed: {}", path.display());
+    }
+    Ok(cwd.join(path))
 }
 
 #[derive(Debug, Deserialize)]
@@ -245,6 +253,38 @@ mod tests {
             fs::read_to_string(cwd.join("nested/file.txt")).unwrap(),
             "hello"
         );
+        fs::remove_dir_all(cwd).unwrap();
+    }
+
+    #[test]
+    fn read_rejects_parent_traversal() {
+        let cwd = temp_dir("read-reject-parent");
+        fs::create_dir_all(&cwd).unwrap();
+        let err = execute(&call("read", json!({ "path": "../secret.txt" })), &cwd).unwrap_err();
+        assert!(
+            err.to_string()
+                .contains("parent directory traversal is not allowed")
+        );
+        fs::remove_dir_all(cwd).unwrap();
+    }
+
+    #[test]
+    fn write_rejects_absolute_paths() {
+        let cwd = temp_dir("write-reject-absolute");
+        fs::create_dir_all(&cwd).unwrap();
+        let absolute = cwd.join("absolute.txt");
+        let err = execute(
+            &call(
+                "write",
+                json!({
+                    "path": absolute.display().to_string(),
+                    "content": "hello"
+                }),
+            ),
+            &cwd,
+        )
+        .unwrap_err();
+        assert!(err.to_string().contains("absolute paths are not allowed"));
         fs::remove_dir_all(cwd).unwrap();
     }
 

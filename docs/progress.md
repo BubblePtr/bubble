@@ -1,6 +1,6 @@
 # Bubble Progress
 
-最后更新：2026-03-30
+最后更新：2026-04-03
 
 ## Workspace / Crate 拆分
 
@@ -17,17 +17,33 @@
 | `crates/harness` | 已完成 | 已创建可观测性骨架 |
 | 真实能力迁移到内部 crates | 未开始 | 仍由 `bubble` crate 承载现有实现 |
 
+## bubble crate
+
+| 项目 | 状态 | 说明 |
+|---|---|---|
+| tools 路径安全加固 | 已完成 | `resolve_path` 禁止绝对路径与 `..` 穿越，新增测试覆盖 |
+| bash tool 描述更新 | 已完成 | 明确标注 "not sandboxed" |
+
 ## 教学网站 `book/`
 
 | 项目 | 状态 | 说明 |
 |---|---|---|
-| Starlight 基础脚手架 | 已完成 | 已创建 `package.json`、`astro.config.mjs`、文档目录 |
+| Next.js + Nextra 基础脚手架 | 已完成 | 已创建 `package.json`、`next.config.mjs`、文档目录 |
 | 首页与章节骨架 | 已完成 | 已创建 `index.mdx`、`ch01-repl.mdx` |
-| 交互组件占位目录 | 已完成 | `src/components/` 已创建 |
+| 首页正文与开源项目推荐卡片 | 已完成 | 引入 `ProjectCard` 组件，推荐 Pi Agent / Hermes Agent |
+| ch01 章节正文 | 已完成 | 完成 REPL 循环、tool calling、路径安全等内容 |
+| 交互组件 | 已完成 | `AgentLoopAnimation`、`ReplCycleAnimation`、`ProjectCard` |
+| 站点首页重新设计 | 已完成 | 简化首页布局，统一全局样式 |
 | 步进式执行动画 | 未开始 | 本阶段不实现 |
-| 章节正文内容 | 进行中 | 先保留章节提纲和设计说明 |
 | 站点本地静态构建 | 已完成 | 已在本地执行 `npm run build` 验证通过 |
 | 站点 CI / 构建接入 | 未开始 | 当前未接入 CI，先保留本地验证路径 |
+
+## SPEC 文档
+
+| 项目 | 状态 | 说明 |
+|---|---|---|
+| 技术栈更新 | 已完成 | 从 Astro + Starlight 迁移至 Next.js + Nextra |
+| 目录结构对齐 | 已完成 | 与实际代码结构保持一致 |
 
 ## 本地验证命令
 

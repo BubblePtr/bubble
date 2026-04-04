@@ -29,5 +29,10 @@ bubble-memory = { path = "../crates/memory", optional = true }
 bubble-evolution = { path = "../crates/evolution", optional = true }
 bubble-harness = { path = "../crates/harness", optional = true }
 
+[dev-dependencies.cargo-husky]
+version = "1"
+default-features = false
+features = ["prepush-hook", "run-for-all", "run-cargo-test", "run-cargo-clippy", "run-cargo-fmt"]
+
 [lints]
 workspace = true

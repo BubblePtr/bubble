@@ -171,7 +171,10 @@ fn resolve_path(cwd: &Path, path: &str) -> Result<std::path::PathBuf> {
         .components()
         .any(|component| matches!(component, Component::ParentDir | Component::Prefix(_)))
     {
-        bail!("parent directory traversal is not allowed: {}", path.display());
+        bail!(
+            "parent directory traversal is not allowed: {}",
+            path.display()
+        );
     }
     Ok(cwd.join(path))
 }

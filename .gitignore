@@ -27,3 +27,6 @@ target
 book/node_modules
 book/dist
 book/.next
+book/.DS_Store
+book/public/.DS_Store
+book/tsconfig.tsbuildinfo
